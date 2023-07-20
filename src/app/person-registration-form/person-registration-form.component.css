@@ -1,0 +1,16 @@
+.person-registration-form-area {
+  padding: 30px;
+  margin: 30px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-items: center;
+}
+
+.submit-button {
+  width: 50%;
+}
+
+.form-field {
+  width: 100%
+}

@@ -1,0 +1,5 @@
+<div [ngClass]="'errorText'" *ngIf="errors">
+  <mat-error *ngFor="let error of errors">
+    {{ error }}
+  </mat-error>
+</div>

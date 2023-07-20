@@ -1,0 +1,9 @@
+<mat-form-field [formGroup]="form" [ngClass]="'category-select'">
+  <mat-label>Choose a Sector</mat-label>
+  <mat-select formControlName="professionCategory">
+    <mat-option *ngFor="let option of professionCategoryOptions" [value]="option.id">{{ option.label }}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="professionCategoryId?.invalid && professionCategoryId?.touched">
+    Sector is required
+  </mat-error>
+</mat-form-field>

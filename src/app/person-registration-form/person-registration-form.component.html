@@ -1,0 +1,40 @@
+<form [formGroup]="registrationForm" (ngSubmit)="submitForm()">
+  <mat-card [ngClass]="'person-registration-form-area'">
+    <mat-card-title>Please enter your name and pick the Sectors you are currently involved in.</mat-card-title>
+    <mat-card-content>
+
+      <div>
+        <mat-form-field [ngClass]="'form-field'">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+          <mat-error *ngIf="name?.invalid && name?.touched">
+            Name is required
+          </mat-error>
+        </mat-form-field>
+        <app-server-error [errors]="nameErrors"></app-server-error>
+      </div>
+
+      <div>
+        <app-profession-category-select
+          [ngClass]="'form-field'"
+          [form]="registrationForm"
+        ></app-profession-category-select>
+        <app-server-error [errors]="professionCategoryErrors"></app-server-error>
+      </div>
+
+      <div>
+        <mat-checkbox formControlName="hasAgreedToTerms" required>Agree to terms</mat-checkbox>
+        <mat-error *ngIf="hasAgreedToTerms?.invalid && hasAgreedToTerms?.touched">
+          You have to agree to the terms before continuing!
+        </mat-error>
+        <app-server-error [errors]="hasAgreedToTermsErrors"></app-server-error>
+      </div>
+
+      <div>
+        <button [ngClass]="'submit-button'" mat-raised-button color="primary" type="submit"
+                [disabled]="registrationForm.invalid">Save
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>
