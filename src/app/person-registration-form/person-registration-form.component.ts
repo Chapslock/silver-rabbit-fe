@@ -6,6 +6,7 @@ import {PersonRepository} from '../repository/person.repository';
 import {ValidationMessage} from '../model/validation-message';
 import {ServerErrors} from '../model/server-errors';
 import {ServerErrorService} from '../service/server-error.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-person-registration-form',
@@ -30,7 +31,7 @@ export class PersonRegistrationFormComponent implements OnInit, OnDestroy {
 
   registrationForm!: FormGroup;
   serverErrors: ServerErrors = {};
-  selectedPersonId!: string;
+  personId!: string;
 
   private subscriptions: Subscription[] = [];
 
@@ -38,6 +39,7 @@ export class PersonRegistrationFormComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private personRepository: PersonRepository,
     private serverErrorService: ServerErrorService,
+    private snackBar: MatSnackBar,
   ) {
   }
 
@@ -83,17 +85,25 @@ export class PersonRegistrationFormComponent implements OnInit, OnDestroy {
       return;
     }
     this.resetFieldErrors();
-
     const person: Person = {
-      id: this.selectedPersonId,
+      personId: this.personId,
       name: this.name?.value,
       professionCategoryId: this.professionCategoryId?.value,
       hasAgreedToTerms: this.hasAgreedToTerms?.value
     };
+    if (!this.personId) {
+      this.registerNewPerson(person);
+    } else {
+      this.updateExistingPerson(person);
+    }
+  }
+
+  private registerNewPerson(person: Person): void {
     this.subscriptions.push(this.personRepository.registerPerson(person)
       .subscribe(
         (savedPerson) => {
-          this.selectedPersonId = savedPerson.id;
+          this.showNotification('Person created succesfully!');
+          this.personId = savedPerson.personId;
           this.name?.setValue(savedPerson.name);
           this.professionCategoryId?.setValue(savedPerson.professionCategoryId);
           this.hasAgreedToTerms?.setValue(savedPerson.hasAgreedToTerms);
@@ -110,5 +120,31 @@ export class PersonRegistrationFormComponent implements OnInit, OnDestroy {
 
   private resetFieldErrors(): void {
     this.serverErrors = {};
+  }
+
+  private updateExistingPerson(person: Person): void {
+    this.subscriptions.push(this.personRepository.updatePerson(person)
+      .subscribe(
+        (savedPerson) => {
+          this.showNotification('Person updated succesfully!');
+          this.personId = savedPerson.personId;
+          this.name?.setValue(savedPerson.name);
+          this.professionCategoryId?.setValue(savedPerson.professionCategoryId);
+          this.hasAgreedToTerms?.setValue(savedPerson.hasAgreedToTerms);
+        },
+        (response) => {
+          const errorCodes: string[] = response?.error?.errorCodes ?? [];
+          this.serverErrors = this.serverErrorService.composeServerErrors(
+            errorCodes,
+            PersonRegistrationFormComponent.SERVER_ERROR_MAPPING,
+          )
+        }
+      ));
+  }
+
+  private showNotification(message: string): void {
+    this.snackBar.open(message, 'close', {
+      duration: 5000,
+    })
   }
 }

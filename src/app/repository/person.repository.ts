@@ -17,4 +17,8 @@ export class PersonRepository {
   registerPerson(person: Person): Observable<Person> {
     return this.http.post<Person>(this.url, person);
   }
+
+  updatePerson(person: Person): Observable<Person> {
+    return this.http.put<Person>(`${this.url}/${person.personId}`, person);
+  }
 }

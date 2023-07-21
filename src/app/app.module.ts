@@ -16,6 +16,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatCardModule} from '@angular/material/card';
 import {ProfessionCategorySelectComponent} from './profession-category-select/profession-category-select.component';
 import {ServerErrorComponent} from './server-error/server-error.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {ServerErrorComponent} from './server-error/server-error.component';
     ReactiveFormsModule,
     MatSelectModule,
     HttpClientModule,
-    MatCardModule
+    MatCardModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 export interface Person {
-  id: string;
+  personId: string;
   name: string;
   professionCategoryId: number;
   hasAgreedToTerms: boolean;
